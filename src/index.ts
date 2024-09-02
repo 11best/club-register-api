@@ -1,11 +1,18 @@
 import { Elysia, t } from "elysia";
-import { getTeachers, getTeacher } from "./teacher";
+import { getTeachers, getTeacher, createTeacher } from "./teacher";
 
 const app = new Elysia()
   .get("/", () => "Hello Elysia")
   .get("/teachers", () => getTeachers())
   .get("/teacher/:id", ({ params: { id } }) => getTeacher(id), {
     params: t.Object({ id: t.String() }),
+  })
+  .post("/teacher", ({ body }) => createTeacher(body), {
+    body: t.Object({
+      id: t.String(),
+      firstname: t.String(),
+      lastname: t.String(),
+    }),
   })
   .listen(3000);
 

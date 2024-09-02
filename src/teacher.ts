@@ -19,3 +19,17 @@ export async function getTeacher(id: string) {
     console.error(`Error getting teacher id: ${id} error: ${e}`);
   }
 }
+
+export async function createTeacher(req: any) {
+  try {
+    return await prisma.teachers.create({
+      data: {
+        id: req.id,
+        firstname: req.firstname,
+        lastname: req.lastname,
+      },
+    });
+  } catch (e: unknown) {
+    console.error(`Error creating teacher: ${e}`);
+  }
+}
