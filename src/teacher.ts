@@ -49,3 +49,13 @@ export async function updateTeacher(req: any) {
     console.error(`Error updating teacher: ${e}`);
   }
 }
+
+export async function deleteTeacher(id: string) {
+  try {
+    return await prisma.teachers.delete({
+      where: { id: id },
+    });
+  } catch (e: unknown) {
+    console.error(`Error deleting teacher id: ${id} error: ${e}`);
+  }
+}

@@ -4,6 +4,7 @@ import {
   getTeacher,
   createTeacher,
   updateTeacher,
+  deleteTeacher,
 } from "./teacher";
 
 const app = new Elysia()
@@ -25,6 +26,9 @@ const app = new Elysia()
       firstname: t.String(),
       lastname: t.String(),
     }),
+  })
+  .delete("/teacher/:id", ({ params: { id } }) => deleteTeacher(id), {
+    params: t.Object({ id: t.String() }),
   })
   .listen(3000);
 
