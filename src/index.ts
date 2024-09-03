@@ -1,5 +1,10 @@
 import { Elysia, t } from "elysia";
-import { getTeachers, getTeacher, createTeacher } from "./teacher";
+import {
+  getTeachers,
+  getTeacher,
+  createTeacher,
+  updateTeacher,
+} from "./teacher";
 
 const app = new Elysia()
   .get("/", () => "Hello Elysia")
@@ -8,6 +13,13 @@ const app = new Elysia()
     params: t.Object({ id: t.String() }),
   })
   .post("/teacher", ({ body }) => createTeacher(body), {
+    body: t.Object({
+      id: t.String(),
+      firstname: t.String(),
+      lastname: t.String(),
+    }),
+  })
+  .put("/teacher", ({ body }) => updateTeacher(body), {
     body: t.Object({
       id: t.String(),
       firstname: t.String(),

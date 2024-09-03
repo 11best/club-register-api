@@ -33,3 +33,19 @@ export async function createTeacher(req: any) {
     console.error(`Error creating teacher: ${e}`);
   }
 }
+
+export async function updateTeacher(req: any) {
+  try {
+    return await prisma.teachers.update({
+      where: {
+        id: req.id,
+      },
+      data: {
+        firstname: req.firstname,
+        lastname: req.lastname,
+      },
+    });
+  } catch (e: unknown) {
+    console.error(`Error updating teacher: ${e}`);
+  }
+}
