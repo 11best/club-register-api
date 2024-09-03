@@ -7,29 +7,34 @@ import {
   deleteTeacher,
 } from "./teacher";
 
+const teachers = new Elysia({ prefix: "/teacher" })
+  .get("/", () => getTeachers())
+  .guard(
+    {
+      body: t.Object({
+        id: t.String(),
+        firstname: t.String(),
+        lastname: t.String(),
+      }),
+    },
+    (app) =>
+      app
+        .post("", ({ body }) => createTeacher(body))
+        .put("", ({ body }) => updateTeacher(body))
+  )
+  .guard(
+    {
+      params: t.Object({ id: t.String() }),
+    },
+    (app) =>
+      app
+        .get("/:id", ({ params: { id } }) => getTeacher(id))
+        .delete("/:id", ({ params: { id } }) => deleteTeacher(id))
+  );
+
 const app = new Elysia()
+  .use(teachers)
   .get("/", () => "Hello Elysia")
-  .get("/teachers", () => getTeachers())
-  .get("/teacher/:id", ({ params: { id } }) => getTeacher(id), {
-    params: t.Object({ id: t.String() }),
-  })
-  .post("/teacher", ({ body }) => createTeacher(body), {
-    body: t.Object({
-      id: t.String(),
-      firstname: t.String(),
-      lastname: t.String(),
-    }),
-  })
-  .put("/teacher", ({ body }) => updateTeacher(body), {
-    body: t.Object({
-      id: t.String(),
-      firstname: t.String(),
-      lastname: t.String(),
-    }),
-  })
-  .delete("/teacher/:id", ({ params: { id } }) => deleteTeacher(id), {
-    params: t.Object({ id: t.String() }),
-  })
   .listen(3000);
 
 console.log(
