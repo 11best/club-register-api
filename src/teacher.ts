@@ -1,5 +1,11 @@
 import { PrismaClient } from "@prisma/client";
 
+interface TeacherInfo {
+  id: string;
+  firstname: string;
+  lastname: string;
+}
+
 const prisma = new PrismaClient();
 
 export async function getTeachers() {
@@ -20,7 +26,7 @@ export async function getTeacher(id: string) {
   }
 }
 
-export async function createTeacher(req: any) {
+export async function createTeacher(req: TeacherInfo) {
   try {
     return await prisma.teachers.create({
       data: {
@@ -34,7 +40,7 @@ export async function createTeacher(req: any) {
   }
 }
 
-export async function updateTeacher(req: any) {
+export async function updateTeacher(req: TeacherInfo) {
   try {
     return await prisma.teachers.update({
       where: {
