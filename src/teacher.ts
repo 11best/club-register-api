@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { NotFoundError } from "elysia";
 
 interface TeacherInfo {
   id: string;
@@ -17,13 +18,13 @@ export async function getTeachers() {
 }
 
 export async function getTeacher(id: string) {
-  try {
-    return await prisma.teachers.findUnique({
-      where: { id: id },
-    });
-  } catch (e: unknown) {
-    console.error(`Error getting teacher id: ${id} error: ${e}`);
+  const teacher = await prisma.teachers.findUnique({
+    where: { id: id },
+  });
+  if (!teacher) {
+    throw new NotFoundError();
   }
+  return teacher;
 }
 
 export async function createTeacher(req: TeacherInfo) {
