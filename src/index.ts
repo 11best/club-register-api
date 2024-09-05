@@ -1,13 +1,6 @@
-import { Elysia, NotFoundError, t } from "elysia";
-import { teachers } from "./teacher/route";
-
-// async function verifyId(id: string) {
-//   const idMatched = await getTeacher(id);
-//   if (!idMatched) {
-//     throw new NotFoundError();
-//   }
-//   return { isFound: !!idMatched };
-// }
+import { Elysia } from "elysia";
+import { teacher } from "./teacher/route";
+import { user } from "./user/route";
 
 const app = new Elysia()
   .onError(({ code, error, set }) => {
@@ -16,30 +9,9 @@ const app = new Elysia()
       return "Not Found";
     }
   })
-  .use(teachers)
+  .use(user)
+  .use(teacher)
   .get("/", () => "Hello Elysia")
-  // .post("/verify-id", ({ body: { id } }) => verifyId(id), {
-  //   body: t.Object({
-  //     id: t.String(),
-  //   }),
-  // })
-  .post(
-    "/register",
-    async ({ body }) => {
-      let userData: any = body;
-      userData.password = await Bun.password.hash(userData.password, {
-        algorithm: "bcrypt",
-        cost: 4,
-      });
-      return userData;
-    },
-    {
-      body: t.Object({
-        id: t.String(),
-        password: t.String(),
-      }),
-    }
-  )
   .listen(3000);
 
 console.log(

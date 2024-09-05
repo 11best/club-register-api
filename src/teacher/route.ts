@@ -7,7 +7,7 @@ import {
   updateTeacher,
 } from "./handler";
 
-export const teachers = new Elysia({ prefix: "/teacher" })
+export const teacher = new Elysia({ prefix: "/teacher" })
   .get("/", () => getTeachers())
   .guard(
     {
