@@ -1,44 +1,13 @@
 import { Elysia, NotFoundError, t } from "elysia";
-import {
-  getTeachers,
-  getTeacher,
-  createTeacher,
-  updateTeacher,
-  deleteTeacher,
-} from "./teacher";
+import { teachers } from "./teacher/route";
 
-const teachers = new Elysia({ prefix: "/teacher" })
-  .get("/", () => getTeachers())
-  .guard(
-    {
-      body: t.Object({
-        id: t.String(),
-        firstname: t.String(),
-        lastname: t.String(),
-      }),
-    },
-    (app) =>
-      app
-        .post("", ({ body }) => createTeacher(body))
-        .put("", ({ body }) => updateTeacher(body))
-  )
-  .guard(
-    {
-      params: t.Object({ id: t.String() }),
-    },
-    (app) =>
-      app
-        .get("/:id", ({ params: { id } }) => getTeacher(id))
-        .delete("/:id", ({ params: { id } }) => deleteTeacher(id))
-  );
-
-async function verifyId(id: string) {
-  const idMatched = await getTeacher(id);
-  if (!idMatched) {
-    throw new NotFoundError();
-  }
-  return { isFound: !!idMatched };
-}
+// async function verifyId(id: string) {
+//   const idMatched = await getTeacher(id);
+//   if (!idMatched) {
+//     throw new NotFoundError();
+//   }
+//   return { isFound: !!idMatched };
+// }
 
 const app = new Elysia()
   .onError(({ code, error, set }) => {
@@ -49,11 +18,11 @@ const app = new Elysia()
   })
   .use(teachers)
   .get("/", () => "Hello Elysia")
-  .post("/verify-id", ({ body: { id } }) => verifyId(id), {
-    body: t.Object({
-      id: t.String(),
-    }),
-  })
+  // .post("/verify-id", ({ body: { id } }) => verifyId(id), {
+  //   body: t.Object({
+  //     id: t.String(),
+  //   }),
+  // })
   .post(
     "/register",
     async ({ body }) => {
