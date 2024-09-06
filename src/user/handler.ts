@@ -11,3 +11,12 @@ export async function verifyId(id: string) {
   }
   return { isFound: !!idMatched };
 }
+
+export async function registerUser(body: any) {
+  let userData: any = body;
+  userData.password = await Bun.password.hash(userData.password, {
+    algorithm: "bcrypt",
+    cost: 4,
+  });
+  return userData;
+}
