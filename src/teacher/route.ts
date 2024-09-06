@@ -12,7 +12,7 @@ export const teacher = new Elysia({ prefix: "/teacher" })
   .guard(
     {
       body: t.Object({
-        id: t.String(),
+        id: t.Number(),
         firstname: t.String(),
         lastname: t.String(),
       }),
@@ -24,7 +24,7 @@ export const teacher = new Elysia({ prefix: "/teacher" })
   )
   .guard(
     {
-      params: t.Object({ id: t.String() }),
+      params: t.Object({ id: t.Number() }),
     },
     (app) =>
       app

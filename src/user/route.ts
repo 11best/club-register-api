@@ -4,7 +4,7 @@ import { registerUser, verifyId } from "./handler";
 export const user = new Elysia()
   .post("/verify-id", ({ body: { id } }) => verifyId(id), {
     body: t.Object({
-      id: t.String(),
+      id: t.Number(),
     }),
   })
   .post("/register", async ({ body }) => registerUser(body), {

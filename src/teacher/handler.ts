@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { NotFoundError } from "elysia";
 
 interface TeacherInfo {
-  id: string;
+  id: number;
   firstname: string;
   lastname: string;
 }
@@ -11,14 +11,14 @@ const prisma = new PrismaClient();
 
 export async function getTeachers() {
   try {
-    return await prisma.teachers.findMany();
+    return await prisma.user.findMany({ where: { role: "TEACHER" } });
   } catch (e: unknown) {
     console.error(`Error getting teachers: ${e}`);
   }
 }
 
-export async function getTeacher(id: string) {
-  const teacher = await prisma.teachers.findUnique({
+export async function getTeacher(id: number) {
+  const teacher = await prisma.user.findUnique({
     where: { id: id },
   });
   if (!teacher) {
@@ -29,11 +29,12 @@ export async function getTeacher(id: string) {
 
 export async function createTeacher(req: TeacherInfo) {
   try {
-    return await prisma.teachers.create({
+    return await prisma.user.create({
       data: {
         id: req.id,
         firstname: req.firstname,
         lastname: req.lastname,
+        role: "TEACHER",
       },
     });
   } catch (e: unknown) {
@@ -43,7 +44,7 @@ export async function createTeacher(req: TeacherInfo) {
 
 export async function updateTeacher(req: TeacherInfo) {
   try {
-    return await prisma.teachers.update({
+    return await prisma.user.update({
       where: {
         id: req.id,
       },
@@ -57,9 +58,9 @@ export async function updateTeacher(req: TeacherInfo) {
   }
 }
 
-export async function deleteTeacher(id: string) {
+export async function deleteTeacher(id: number) {
   try {
-    return await prisma.teachers.delete({
+    return await prisma.user.delete({
       where: { id: id },
     });
   } catch (e: unknown) {
