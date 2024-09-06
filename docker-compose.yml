@@ -1,6 +1,7 @@
 version: "3.9"
 services:
   postgres_db:
+    container_name: club_postgres
     image: postgres:latest
     restart: always
     environment:
@@ -11,21 +12,6 @@ services:
     volumes:
       - postgres_db:/var/lib/postgresql/data
 
-  pgadmin:
-    image: dpage/pgadmin4
-    restart: always
-    ports:
-      - "8888:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@email.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    volumes:
-      - pgadmin-data:/var/lib/pgadmin
-    depends_on:
-      - "postgres_db"
-
 volumes:
   postgres_db:
-    driver: local
-  pgadmin-data:
     driver: local
