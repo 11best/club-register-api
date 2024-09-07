@@ -5,11 +5,11 @@ import { getTeacher } from "../user/handler";
 const prisma = new PrismaClient();
 
 export async function verifyId(id: number) {
-  const idMatched = await getTeacher(id);
-  if (!idMatched) {
-    throw new NotFoundError();
-  }
-  return { isFound: !!idMatched };
+  const isRegistered = await prisma.loginUser.findUnique({
+    where: { id: id },
+  });
+  const isIdMatched = await getTeacher(id);
+  return { isRegistered: !!isRegistered && isIdMatched };
 }
 
 export async function registerUser(body: any) {
