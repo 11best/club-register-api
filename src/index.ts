@@ -1,6 +1,6 @@
 import { Elysia } from "elysia";
-import { teacher } from "./teacher/route";
-import { user } from "./user/route";
+import { teacher } from "./user/route";
+import { user } from "./loginUser/route";
 
 const app = new Elysia()
   .onError(({ code, error, set }) => {

@@ -1,15 +1,34 @@
 import { Elysia, t } from "elysia";
-import { registerUser, verifyId } from "./handler";
+import {
+  createTeacher,
+  deleteTeacher,
+  getTeacher,
+  getTeachers,
+  updateTeacher,
+} from "./handler";
 
-export const user = new Elysia()
-  .post("/verify-id", ({ body: { id } }) => verifyId(id), {
+export const teacher = new Elysia({ prefix: "/teacher" })
+  .get("/", () => getTeachers())
+  .post("", ({ body }) => createTeacher(body), {
     body: t.Object({
-      id: t.Number(),
+      id: t.Optional(t.Number()),
+      firstname: t.String(),
+      lastname: t.String(),
     }),
   })
-  .post("/register", async ({ body }) => registerUser(body), {
+  .put("", ({ body }) => updateTeacher(body), {
     body: t.Object({
-      id: t.String(),
-      password: t.String(),
+      id: t.Number(),
+      firstname: t.String(),
+      lastname: t.String(),
     }),
-  });
+  })
+  .guard(
+    {
+      params: t.Object({ id: t.Number() }),
+    },
+    (app) =>
+      app
+        .get("/:id", ({ params: { id } }) => getTeacher(id))
+        .delete("/:id", ({ params: { id } }) => deleteTeacher(id))
+  );

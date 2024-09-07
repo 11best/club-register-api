@@ -1,25 +1,66 @@
 import { PrismaClient } from "@prisma/client";
 import { NotFoundError } from "elysia";
-import { getTeacher } from "../teacher/handler";
+
+interface TeacherRequest {
+  id?: number;
+  firstname: string;
+  lastname: string;
+}
 
 const prisma = new PrismaClient();
 
-export async function verifyId(id: number) {
-  const idMatched = await getTeacher(id);
-  if (!idMatched) {
-    throw new NotFoundError();
+export async function getTeachers() {
+  try {
+    return await prisma.user.findMany({ where: { role: "TEACHER" } });
+  } catch (e: unknown) {
+    console.error(`Error getting teachers: ${e}`);
   }
-  return { isFound: !!idMatched };
 }
 
-export async function registerUser(body: any) {
-  let userData: any = body;
-  const isIdValid = await verifyId(body.id);
-  if (isIdValid) {
-    userData.password = await Bun.password.hash(userData.password, {
-      algorithm: "bcrypt",
-      cost: 4,
-    });
-    return userData;
+export async function getTeacher(id: number) {
+  const teacher = await prisma.user.findUnique({
+    where: { id: id, role: "TEACHER" },
+  });
+  if (!teacher) {
+    throw new NotFoundError();
   }
+  return teacher;
+}
+
+export async function createTeacher(req: TeacherRequest) {
+  try {
+    return await prisma.user.create({
+      data: {
+        id: req.id,
+        firstname: req.firstname,
+        lastname: req.lastname,
+        role: "TEACHER",
+      },
+    });
+  } catch (e: unknown) {
+    console.error(`Error creating teacher: ${e}`);
+  }
+}
+
+export async function updateTeacher(req: TeacherRequest) {
+  try {
+    return await prisma.user.update({
+      where: {
+        id: req.id,
+      },
+      data: {
+        firstname: req.firstname,
+        lastname: req.lastname,
+      },
+    });
+  } catch (e: unknown) {
+    console.error(`Error updating teacher: ${e}`);
+  }
+}
+
+export async function deleteTeacher(id: number) {
+  await prisma.user.delete({
+    where: { id: id },
+  });
+  return { message: `teacher id: ${id} delete successful!` };
 }
