@@ -24,6 +24,7 @@ model LoginUser {
   user User @relation(fields: [id], references: [id])
   password String
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("login_users")
 }
