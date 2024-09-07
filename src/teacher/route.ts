@@ -9,19 +9,20 @@ import {
 
 export const teacher = new Elysia({ prefix: "/teacher" })
   .get("/", () => getTeachers())
-  .guard(
-    {
-      body: t.Object({
-        id: t.Optional(t.Number()),
-        firstname: t.String(),
-        lastname: t.String(),
-      }),
-    },
-    (app) =>
-      app
-        .post("", ({ body }) => createTeacher(body))
-        .put("", ({ body }) => updateTeacher(body))
-  )
+  .post("", ({ body }) => createTeacher(body), {
+    body: t.Object({
+      id: t.Optional(t.Number()),
+      firstname: t.String(),
+      lastname: t.String(),
+    }),
+  })
+  .put("", ({ body }) => updateTeacher(body), {
+    body: t.Object({
+      id: t.Number(),
+      firstname: t.String(),
+      lastname: t.String(),
+    }),
+  })
   .guard(
     {
       params: t.Object({ id: t.Number() }),
