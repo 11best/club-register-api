@@ -59,11 +59,8 @@ export async function updateTeacher(req: TeacherRequest) {
 }
 
 export async function deleteTeacher(id: number) {
-  const deletedTeacher = await prisma.user.delete({
+  await prisma.user.delete({
     where: { id: id },
   });
-  if (!deletedTeacher) {
-    throw new NotFoundError();
-  }
   return { message: `teacher id: ${id} delete successful!` };
 }
