@@ -1,8 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import { NotFoundError } from "elysia";
 
-interface TeacherInfo {
-  id: number;
+interface TeacherRequest {
+  id?: number;
   firstname: string;
   lastname: string;
 }
@@ -19,7 +19,7 @@ export async function getTeachers() {
 
 export async function getTeacher(id: number) {
   const teacher = await prisma.user.findUnique({
-    where: { id: id },
+    where: { id: id, role: "TEACHER" },
   });
   if (!teacher) {
     throw new NotFoundError();
@@ -27,7 +27,7 @@ export async function getTeacher(id: number) {
   return teacher;
 }
 
-export async function createTeacher(req: TeacherInfo) {
+export async function createTeacher(req: TeacherRequest) {
   try {
     return await prisma.user.create({
       data: {
@@ -42,7 +42,7 @@ export async function createTeacher(req: TeacherInfo) {
   }
 }
 
-export async function updateTeacher(req: TeacherInfo) {
+export async function updateTeacher(req: TeacherRequest) {
   try {
     return await prisma.user.update({
       where: {

@@ -12,7 +12,7 @@ export const teacher = new Elysia({ prefix: "/teacher" })
   .guard(
     {
       body: t.Object({
-        id: t.Number(),
+        id: t.Optional(t.Number()),
         firstname: t.String(),
         lastname: t.String(),
       }),
