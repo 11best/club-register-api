@@ -9,12 +9,22 @@ interface LoginUserRequest {
 
 const prisma = new PrismaClient();
 
-export async function getLoginUser() {
+export async function getLoginUsers() {
   try {
     return await prisma.loginUser.findMany();
   } catch (e: unknown) {
     console.error(`Error getting login user: ${e}`);
   }
+}
+
+async function getLoginUser(id: number) {
+  const user = await prisma.loginUser.findUnique({
+    where: { id: id },
+  });
+  if (!user) {
+    throw new NotFoundError();
+  }
+  return user;
 }
 
 async function createLoginUser(req: LoginUserRequest) {
@@ -50,4 +60,17 @@ export async function registerLoginUser(req: LoginUserRequest) {
   } else {
     return { message: "already register!" };
   }
+}
+
+export async function loginUser(req: LoginUserRequest) {
+  const { isRegistered } = await verifyId(req.id);
+  if (!isRegistered) {
+    return { message: "not yet registered!!!" };
+  }
+  const userData = await getLoginUser(req.id);
+  const isMatched = await Bun.password.verify(req.password, userData.password);
+  if (!isMatched) {
+    throw new Error("invalid password");
+  }
+  return { message: "login successful!" };
 }

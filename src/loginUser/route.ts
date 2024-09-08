@@ -1,16 +1,27 @@
 import { Elysia, t } from "elysia";
-import { getLoginUser, registerLoginUser, verifyId } from "./handler";
+import {
+  getLoginUsers,
+  loginUser,
+  registerLoginUser,
+  verifyId,
+} from "./handler";
 
 export const user = new Elysia()
-  .get("/login-user", () => getLoginUser())
+  .get("/login-user", () => getLoginUsers())
   .post("/verify-id", ({ body: { id } }) => verifyId(id), {
     body: t.Object({
       id: t.Number(),
     }),
   })
-  .post("/register", async ({ body }) => registerLoginUser(body), {
-    body: t.Object({
-      id: t.Number(),
-      password: t.String(),
-    }),
-  });
+  .guard(
+    {
+      body: t.Object({
+        id: t.Number(),
+        password: t.String(),
+      }),
+    },
+    (app) =>
+      app
+        .post("/register", async ({ body }) => registerLoginUser(body))
+        .post("/login", async ({ body }) => loginUser(body))
+  );
