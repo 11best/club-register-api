@@ -42,18 +42,15 @@ export const user = new Elysia()
     (app) =>
       app
         .post("/register", async ({ body }) => registerLoginUser(body))
-        .post(
-          "/login",
-          async ({ jwt, cookie: { auth }, body }) => {
+        .post("/login", async ({ jwt, cookie: { auth }, body }) => {
+          const { isLoggedin } = await loginUser(body);
+          if (isLoggedin) {
             auth.set({
               value: await jwt.sign({ id: body.id }),
               httpOnly: true,
               maxAge: 7 * 86400,
             });
-
-            return `Sign in as ${auth.value} ${auth}`;
+            return `Logged in!`;
           }
-
-          // async ({ body }) => loginUser(body)
-        )
+        })
   );

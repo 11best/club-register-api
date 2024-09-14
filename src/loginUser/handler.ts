@@ -72,5 +72,5 @@ export async function loginUser(req: LoginUserRequest) {
   if (!isMatched) {
     throw new Error("invalid password");
   }
-  return { message: "login successful!" };
+  return { isLoggedin: isMatched };
 }
