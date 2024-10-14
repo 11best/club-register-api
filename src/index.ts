@@ -1,6 +1,7 @@
 import { Elysia } from "elysia";
 import { teacher } from "./user/route";
 import { user } from "./loginUser/route";
+import { club } from "./club/route";
 
 const app = new Elysia()
   .onError(({ code, error, set }) => {
@@ -11,6 +12,7 @@ const app = new Elysia()
   })
   .use(user)
   .use(teacher)
+  .use(club)
   .get("/", () => "Hello Elysia")
   .listen(3000);
 
