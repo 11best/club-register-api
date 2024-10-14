@@ -29,6 +29,15 @@ model LoginUser {
   @@map("login_users")
 }
 
+model Club {
+  id Int @id @unique @default(autoincrement())
+  name String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("club")
+}
+
 enum Role {
   TEACHER
   STUDENT
