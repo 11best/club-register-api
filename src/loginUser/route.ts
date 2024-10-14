@@ -14,19 +14,15 @@ export const user = new Elysia()
       secret: process.env.JWT_SECRET!,
     })
   )
-  .get(
-    "/login-user",
-    async ({ jwt, set, cookie: { auth } }) => {
-      const profile = await jwt.verify(auth.value);
-      if (!profile) {
-        set.status = 401;
-        return "Unauthorized";
-      }
-
-      return `Hello ${profile.id}`;
+  .get("/login-user", async ({ jwt, set, cookie: { auth } }) => {
+    const profile = await jwt.verify(auth.value);
+    if (!profile) {
+      set.status = 401;
+      return "Unauthorized";
     }
-    // () => getLoginUsers()
-  )
+
+    return getLoginUsers();
+  })
   .post("/verify-id", ({ body: { id } }) => verifyId(id), {
     body: t.Object({
       id: t.Number(),
