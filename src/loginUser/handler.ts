@@ -19,7 +19,7 @@ export async function getLoginUsers() {
 
 async function getLoginUser(id: number) {
   const user = await prisma.loginUser.findUnique({
-    where: { id: id },
+    where: { userId: id },
   });
   if (!user) {
     throw new NotFoundError();
@@ -31,7 +31,7 @@ async function createLoginUser(req: LoginUserRequest) {
   try {
     return await prisma.loginUser.create({
       data: {
-        id: req.id,
+        userId: req.id,
         password: req.password,
       },
     });
@@ -42,7 +42,7 @@ async function createLoginUser(req: LoginUserRequest) {
 
 export async function verifyId(id: number) {
   const isRegistered = await prisma.loginUser.findUnique({
-    where: { id: id },
+    where: { userId: id },
   });
   const isIdMatched = await getTeacher(id);
   return { isRegistered: !!isRegistered && isIdMatched };

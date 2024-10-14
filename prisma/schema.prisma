@@ -20,8 +20,8 @@ model User {
 }
 
 model LoginUser {
-  id Int @id
-  user User @relation(fields: [id], references: [id])
+  userId Int @id @unique @default(autoincrement())
+  user User @relation(fields: [userId], references: [id])
   password String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
